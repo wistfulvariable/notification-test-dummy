@@ -3,6 +3,10 @@ name: Trigger Notifications
 on:
   workflow_dispatch:
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   comment:
     runs-on: ubuntu-latest
@@ -25,7 +29,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: 2,
-              body: 'Benochmark results: Google OAuth2 adds ~200ms latency to login flow. GitHub OAuth adds ~150ms. Both within acceptable range for auth endpoints.'
+              body: 'Benchmark results: Google OAuth2 adds ~200ms latency to login flow. GitHub OAuth adds ~150ms. Both within acceptable range for auth endpoints.'
             })
       - name: Comment on issue 3
         uses: actions/github-script@v7
