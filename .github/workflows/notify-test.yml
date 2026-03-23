@@ -1,0 +1,50 @@
+name: Trigger Notifications
+
+on:
+  workflow_dispatch:
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on issue 1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 1,
+              body: 'Automated triage: This bug has been confirmed on v2.3.1 and v2.4.0. Priority elevated to P1. Assigning to security team.'
+            })
+      - name: Comment on issue 2
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 2,
+              body: 'Benochmark results: Google OAuth2 adds ~200ms latency to login flow. GitHub OAuth adds ~150ms. Both within acceptable range for auth endpoints.'
+            })
+      - name: Comment on issue 3
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 3,
+              body: 'Rate limiting implementation PR is ready for review. Using sliding window with in-memory store (Redis optional). See PR #6.'
+            })
+      - name: Review PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: 5,
+              body: 'LGTM! The JWT expiry check looks correct. One suggestion: wrap the atob/JSON.parse in try/catch for malformed tokens.',
+              event: 'COMMENT'
+            })
